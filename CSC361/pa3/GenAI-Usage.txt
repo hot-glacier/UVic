@@ -1,0 +1,4 @@
+Google Gemini generative AI
+https://gemini.google.com/app
+
+I used generative AI to help me with structuring how to write this program, along with helping me understand how to restructure my code from assignment 2 into a version based on classes.

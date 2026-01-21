@@ -1,4 +1,4 @@
-(* CSC330: Assignment 1
+(* CSC330: Assignment 1, Problem 1
  * Ryan Glaeser 
  * V00832892 *)
 

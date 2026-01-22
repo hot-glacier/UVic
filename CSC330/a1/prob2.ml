@@ -91,25 +91,30 @@ let summarize ((countries : country list), (id : string)) =
         let available = avail record in
         let last_year =
           match last record with
-          | None -> "No data"
+          | None -> ""
           | Some (year, rate) -> string_of_int year ^ " with rate of " ^ string_of_float rate ^ "%"
         in
         let (min_rate, max_rate) = minmax record in
         let min =
           match min_rate with
-          | None -> "No data"
+          | None -> ""
           | Some (year, rate) -> string_of_int year ^ " with rate of " ^ string_of_float rate ^ "%"
         in
         let max =
           match max_rate with
-          | None -> "No data"
+          | None -> ""
           | Some (year, rate) -> string_of_int year ^ " with rate of " ^ string_of_float rate ^ "%"
         in
-        "Country: " ^ record.name ^ " (" ^ record.id ^ ")" ^ "\n" ^
-        "Records available: " ^ string_of_int available ^ "\n" ^
-        "Last record: " ^ last_year ^ "\n" ^
-        "Lowest rate: " ^ min ^ "\n" ^
-        "Highest rate: " ^ max
+        if (available = 0) then
+          "Country: " ^ record.name ^ " (" ^ record.id ^ ")" ^ "\n" ^
+          "Records available: " ^ string_of_int available ^ " years"
+
+        else
+          "Country: " ^ record.name ^ " (" ^ record.id ^ ")" ^ "\n" ^
+          "Records available: " ^ string_of_int available ^ " years" ^ "\n" ^
+          "Last record: " ^ last_year ^ "\n" ^
+          "Lowest rate: " ^ min ^ "\n" ^
+          "Highest rate: " ^ max
       else
         find_country rest
   in

@@ -43,7 +43,10 @@ let () =
   let x = summarize (records_v2, "CAN") in
   print_string ("\n" ^ x ^ "\n\n");
 
-
+let () =
+  let x = summarize (records_v2, "AND") in
+  print_string ("\n" ^ x ^ "\n\n")
+in
 
 let y = concat (", ", ["a"; ""; "b"]) in
 print_string ("concat test 1: " ^ y ^ "\n");

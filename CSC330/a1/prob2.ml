@@ -3,16 +3,8 @@
  * V00832892 *)
 
 
-
 (* Custom country type used in get_records function *)
  type country = {id : string; name : string; rates : float option list}
-
-(* Read in file *)
-let read_file path =
-  let fp = open_in path in
-  let s = really_input_string fp (in_channel_length fp) in
-  close_in fp;
-  s
 
 (* This function takes in a string and returns a formatted
  * list of countries in the form {name; id; rates_list} *)
@@ -41,7 +33,7 @@ let get_records (csv_contents : string) =
   parse_lines lines
 
 (* This function takes in a country record and returns
- * a count of the available inflation rates recorded *)
+ * the number of available inflation rates recorded *)
 let avail (record : country) =
   let rec counter count rates =
     match rates with
@@ -52,7 +44,7 @@ let avail (record : country) =
   counter 0 record.rates
 
 (* This function takes in a country record and returns
- * the most recent year that has an inflation rate recorded*)
+ * the most recent year that has an inflation rate recorded *)
 let last (record : country) =
   let rec find_last year latest rates =
     match rates with
@@ -70,8 +62,7 @@ let last (record : country) =
   let rec find_minmax year min max rates =
     match rates with
     | [] -> (min, max)
-    | None :: rest ->
-      find_minmax (year + 1) min max rest
+    | None :: rest -> find_minmax (year + 1) min max rest
     | Some rate :: rest ->
       let new_min =
         match min with
@@ -89,6 +80,50 @@ let last (record : country) =
   in
   find_minmax 1960 None None record.rates
 
-(* This function *)
+(* This function takes a list of countries and an ID string and returns
+ * a summary of the country's inflation rates *)
 let summarize ((countries : country list), (id : string)) =
-  
+  let rec find_country records =
+    match records with
+    | [] -> "Cannot find " ^ id
+    | record :: rest ->
+      if record.id = id then
+        let available = avail record in
+        let last_year =
+          match last record with
+          | None -> "No data"
+          | Some (year, rate) -> string_of_int year ^ " with rate of " ^ string_of_float rate ^ "%"
+        in
+        let (min_rate, max_rate) = minmax record in
+        let min =
+          match min_rate with
+          | None -> "No data"
+          | Some (year, rate) -> string_of_int year ^ " with rate of " ^ string_of_float rate ^ "%"
+        in
+        let max =
+          match max_rate with
+          | None -> "No data"
+          | Some (year, rate) -> string_of_int year ^ " with rate of " ^ string_of_float rate ^ "%"
+        in
+        "Country: " ^ record.name ^ " (" ^ record.id ^ ")" ^ "\n" ^
+        "Records available: " ^ string_of_int available ^ "\n" ^
+        "Last record: " ^ last_year ^ "\n" ^
+        "Lowest rate: " ^ min ^ "\n" ^
+        "Highest rate: " ^ max
+      else
+        find_country rest
+  in
+  find_country countries
+
+(* Bonus task: This function takes in a separating string and a list of strings
+ * and returns a string of the list elements separated by the first argument *)
+ let concat ((sep : string), (strings : string list)) =
+  let rec iterate acc rem_strings =
+    match rem_strings with
+    | [] -> acc
+    | "" :: rest -> iterate acc rest
+    | s :: rest -> 
+      if acc = "" then iterate s rest
+      else iterate (acc ^ sep ^ s) rest
+  in
+  iterate "" strings

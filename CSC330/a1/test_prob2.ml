@@ -28,3 +28,25 @@ let () =
 print_string("minmax test 1: Pass\n");
 assert (minmax ({id = "UNK"; name = "Unknown"; rates = [None; None; None]}) = (None, None));
 print_string("minmax test 2: Pass\n")
+
+
+
+
+let read_file path =
+let fp = open_in path in
+let s = really_input_string fp (in_channel_length fp) in
+close_in fp;
+s
+
+let records_v2 = get_records (read_file "csc330_a1.csv")
+let () =
+  let x = summarize (records_v2, "CAN") in
+  print_string ("\n" ^ x ^ "\n\n");
+
+
+
+let y = concat (", ", ["a"; ""; "b"]) in
+print_string ("concat test 1: " ^ y ^ "\n");
+
+let y = concat (", ", ["Bees"; ""; "shouldn't"; ""; ""; "be"; "able"; "to fly"; ""]) in
+print_string ("concat test 2: " ^ y ^ "\n");
